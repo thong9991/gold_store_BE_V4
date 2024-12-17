@@ -1,0 +1,13 @@
+# Dependency directories
+node_modules/
+gold-store-eced9-firebase-adminsdk-z2o81-3d382436c4.json
+# Environment variable
+*.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.*.local
+
+# Other
+.DS_Store
