@@ -4,6 +4,7 @@ import { deleteCheckedOrdersComposer } from '../../../infra/services/composers/O
 import { deleteOrderComposer } from '../../../infra/services/composers/Order/deleteOrder'
 import { getOrderComposer } from '../../../infra/services/composers/Order/getOrder'
 import { updateOrderComposer } from '../../../infra/services/composers/Order/updateOrder'
+import { getOrderStatisticsComposer } from '../../../infra/services/composers/Order/getOrderStatistics'
 import { expressAdapter } from '../../adapters/express'
 import { ensureAdminAuthorized } from '../middlewares/ensureAdminAuthorized'
 import { ensureAuthenticated } from '../middlewares/ensureAuthenticated'
@@ -69,6 +70,15 @@ orderRoutes.delete(
   ensureAdminAuthorized,
   async (request: Request, response: Response) => {
     const adapter = await expressAdapter(request, deleteOrderComposer())
+    return response.status(adapter.statusCode).json(adapter.body)
+  }
+)
+
+orderRoutes.get(
+  '/statistics',
+  ensureAdminAuthorized,
+  async (request: Request, response: Response) => {
+    const adapter = await expressAdapter(request, getOrderStatisticsComposer())
     return response.status(adapter.statusCode).json(adapter.body)
   }
 )

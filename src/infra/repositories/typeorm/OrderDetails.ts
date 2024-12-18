@@ -235,4 +235,48 @@ export class OrderDetailsRepository implements IOrderDetailsRepository {
       last_page: Math.ceil(total / perPage),
     }
   }
+
+  /**
+   * Find statistics for order
+   * @async
+   * @returns {Promise<any>}
+   */
+  async getOrderStatistic(): Promise<any> {
+    const orderDetailsRepository = AppDataSource.getRepository(OrderDetailsDTO)
+    const today = new Date()
+    const formarttedToday = today.toISOString().split('T')[0]
+    const sevenDaysAgo = new Date(today.setDate(today.getDate() - 7))
+    const monthAgo = new Date(today.setDate(today.getDate() - 30))
+
+    const query = orderDetailsRepository
+      .createQueryBuilder('order')
+      .select('COUNT(order.id)', 'total')
+      .addSelect('SUM(order.total)', 'sum')
+
+    const result = await query
+      .where('DATE(order.created_at) = :date', {
+        date: formarttedToday,
+      })
+      .getRawOne()
+
+    const resultTotalWeek = await query
+      .where('order.created_at >= :date', {
+        date: sevenDaysAgo,
+      })
+      .getRawOne()
+
+    const resultTotalMonth = await query
+      .where('order.created_at >= :date', {
+        date: monthAgo,
+      })
+      .getRawOne()
+
+    return {
+      body: {
+        day: result,
+        week: resultTotalWeek,
+        month: resultTotalMonth,
+      },
+    }
+  }
 }
