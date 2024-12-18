@@ -8,6 +8,7 @@ import { getOrderStatisticsComposer } from '../../../infra/services/composers/Or
 import { expressAdapter } from '../../adapters/express'
 import { ensureAdminAuthorized } from '../middlewares/ensureAdminAuthorized'
 import { ensureAuthenticated } from '../middlewares/ensureAuthenticated'
+import { getOrderReportComposer } from '../../../infra/services/composers/Order/getOrderReport'
 
 /**
  * Router for handling order-related routes.
@@ -74,11 +75,26 @@ orderRoutes.delete(
   }
 )
 
+/**
+ * Endpoint to get a order statistic.
+ */
 orderRoutes.get(
   '/statistics',
   ensureAdminAuthorized,
   async (request: Request, response: Response) => {
     const adapter = await expressAdapter(request, getOrderStatisticsComposer())
+    return response.status(adapter.statusCode).json(adapter.body)
+  }
+)
+
+/**
+ * Endpoint to get a order for report
+ */
+orderRoutes.get(
+  '/report',
+  ensureAdminAuthorized,
+  async (request: Request, response: Response) => {
+    const adapter = await expressAdapter(request, getOrderReportComposer())
     return response.status(adapter.statusCode).json(adapter.body)
   }
 )

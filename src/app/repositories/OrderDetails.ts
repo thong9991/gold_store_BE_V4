@@ -77,4 +77,11 @@ export interface IOrderDetailsRepository {
    * @returns {Promise<any>}
    */
   getOrderStatistic(): Promise<any>
+
+  /**
+   * Get order for report
+   * @async
+   * @returns {Promise<any>}
+   */
+  getOrderReport(): Promise<any>
 }

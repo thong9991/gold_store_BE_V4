@@ -1,4 +1,5 @@
 import { ulid } from 'ulidx'
+import { Between } from 'typeorm'
 import { IOrderDetailsRepository } from '../../../app/repositories/OrderDetails'
 import { ICreateOrderDetailsRequestDTO } from '../../../domain/dtos/OrderDetails/CreateOrderDetails'
 import { OrderDetailsDTO } from '../../../domain/dtos/OrderDetails/OrderDetails'
@@ -277,6 +278,45 @@ export class OrderDetailsRepository implements IOrderDetailsRepository {
         week: resultTotalWeek,
         month: resultTotalMonth,
       },
+    }
+  }
+
+  /**
+   * Get order for report
+   * @async
+   * @returns {Promise<any>}
+   */
+  async getOrderReport(): Promise<any> {
+    const today = new Date()
+    const formarttedToday = today.toISOString().split('T')[0]
+    const orderDetailsRepository = AppDataSource.getRepository(OrderDetailsDTO)
+    const orders = await orderDetailsRepository.find({
+      order: {
+        id: 'DESC',
+      },
+      where: {
+        createdAt: Between(
+          new Date(`${formarttedToday} 00:00:00`),
+          new Date(`${formarttedToday} 23:59:59`)
+        ),
+      },
+      relations: ['orderExchanges', 'orderExchanges.goldPrice'],
+      select: {
+        id: true,
+        staff: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+        total: true,
+        goldToCash: true,
+        discount: true,
+        isChecked: true,
+        description: true,
+      },
+    })
+    return {
+      body: orders,
     }
   }
 }
