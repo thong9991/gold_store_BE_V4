@@ -113,7 +113,6 @@ export class StaffRepository implements IStaffRepository {
         firstName: true,
         lastName: true,
       },
-      cache: 60 * 1000,
     })
 
     return staffs
