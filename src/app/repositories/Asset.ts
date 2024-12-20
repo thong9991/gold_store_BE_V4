@@ -19,11 +19,10 @@ export interface IAssetRepository {
   /**
    * Deletes the asset by its ID.
    * @async
-   * @param {number} drawer_id - The ID of the cash drawer to delete.
-   * @param {string} asset_type - The type of asset to delete.
+   * @param {number} asset_id - The ID of the asset to delete.
    * @returns {Promise<void>} A promise resolves when the asset is deleted.
    */
-  delete(drawer_id: number, asset_type: String): Promise<void>
+  delete(asset_id: number): Promise<void>
 
   /**
    * Finds the first asset by its cash drawer ID.
@@ -52,6 +51,14 @@ export interface IAssetRepository {
    * @returns {Promise<IAssetInRequestDTO>} The all assets list.
    */
   findByDrawerId(drawer_id: number): Promise<IAssetInRequestDTO[]>
+
+  /**
+   * Retrieves the list of assets data by cash drawer ID.
+   * @async
+   * @param {number} asset_id - The ID of cash drawer.
+   * @returns {Promise<IAssetInRequestDTO>} The all assets list.
+   */
+  findById(asset_id: number): Promise<IAssetInRequestDTO | unknown>
 
   /**
    * Retrieves the paginated list of assets.

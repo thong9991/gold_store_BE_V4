@@ -12,5 +12,5 @@ export interface IDeleteAssetUseCase {
    * @param {string} assetType - The type of asset to delete.
    * @returns {Promise<ResponseDTO>} The response data.
    */
-  execute(drawerId: number, assetType: string): Promise<ResponseDTO>
+  execute(assetId: number): Promise<ResponseDTO>
 }

@@ -38,7 +38,7 @@ assetRoutes.get(
  * Endpoint to delete a asset (requires admin authentication).
  */
 assetRoutes.delete(
-  '/',
+  '/:id',
   ensureAdminAuthorized,
   async (request: Request, response: Response) => {
     const adapter = await expressAdapter(request, deleteAssetComposer())

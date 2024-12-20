@@ -18,10 +18,7 @@ export class DeleteAssetUseCase implements IDeleteAssetUseCase {
    * @param {IAssetRepository} assetRepository - The repository for the assets data.
    * @param {ICashFlowRepository} cashFlowRepository - The repository for the cash flow statements data.
    */
-  constructor(
-    private assetRepository: IAssetRepository,
-    private cashFlowRepository: ICashFlowRepository
-  ) {}
+  constructor(private assetRepository: IAssetRepository) {}
 
   /**
    * Executes the delete asset use case.
@@ -30,20 +27,10 @@ export class DeleteAssetUseCase implements IDeleteAssetUseCase {
    * @param {string} assetType - The type of asset to delete.
    * @returns {Promise<ResponseDTO>} The response data.
    */
-  async execute(drawerId: number, assetType: string): Promise<ResponseDTO> {
+  async execute(assetId: number): Promise<ResponseDTO> {
     try {
-      const cashFlowExist =
-        await this.cashFlowRepository.findByAssetId(drawerId)
-      if (cashFlowExist) {
-        return {
-          data: { error: AssetErrorType.CashFlowConstraint },
-          success: false,
-        }
-      }
-
-      const assetExist = (await this.assetRepository.findByDrawerIdAndAssetType(
-        drawerId,
-        assetType
+      const assetExist = (await this.assetRepository.findById(
+        assetId
       )) as AssetDTO | null
 
       if (!assetExist) {
@@ -53,7 +40,7 @@ export class DeleteAssetUseCase implements IDeleteAssetUseCase {
         }
       }
 
-      await this.assetRepository.delete(drawerId, assetType)
+      await this.assetRepository.delete(assetId)
 
       return { data: { msg: AssetSuccessType.AssetDeleted }, success: true }
     } catch (error: any) {

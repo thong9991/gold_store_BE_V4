@@ -36,39 +36,19 @@ export class DeleteAssetController implements IController {
     let response
 
     // Validates body parameters.
-    if (httpRequest.body && Object.keys(httpRequest.body).length > 0) {
-      const bodyParams = Object.keys(httpRequest.body)
+    const id = (httpRequest.path as { id: number }).id
 
-      if (bodyParams.includes('drawerId') && bodyParams.includes('assetType')) {
-        const deleteAssetRequestDTO = httpRequest.body as {
-          drawerId: number
-          assetType: string
-        }
+    // Executes the delete asset use case.
+    response = await this.deleteAssetUseCase.execute(id)
 
-        // Executes the delete asset use case.
-        response = await this.deleteAssetUseCase.execute(
-          deleteAssetRequestDTO.drawerId,
-          deleteAssetRequestDTO.assetType
-        )
-      } else {
-        // Invalid parameters, return a 422 Unprocessable Entity error.
-        error = this.httpErrors.error_422()
-        return new HttpResponse(error.statusCode, error.body)
-      }
-
-      if (!response.success) {
-        // Delete asset failed, return a 400 Bad Request error.
-        error = this.httpErrors.error_400()
-        return new HttpResponse(error.statusCode, response.data)
-      }
-
-      // Delete asset succeeded, return a 200 OK response.
-      const success = this.httpSuccess.success_200(response.data)
-      return new HttpResponse(success.statusCode, success.body)
+    if (!response.success) {
+      // Delete asset failed, return a 400 Bad Request error.
+      error = this.httpErrors.error_400()
+      return new HttpResponse(error.statusCode, response.data)
     }
 
-    // Invalid request, return a 500 Internal Server Error.
-    error = this.httpErrors.error_500()
-    return new HttpResponse(error.statusCode, error.body)
+    // Delete asset succeeded, return a 200 OK response.
+    const success = this.httpSuccess.success_200(response.data)
+    return new HttpResponse(success.statusCode, success.body)
   }
 }

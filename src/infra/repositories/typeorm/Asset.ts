@@ -32,14 +32,9 @@ export class AssetRepository implements IAssetRepository {
    * @param {string} asset_type - The type of asset to delete.
    * @returns {Promise<void>} The promise that resolves when the asset is deleted.
    */
-  async delete(drawer_id: number, asset_type: string): Promise<void> {
+  async delete(asset_id: number): Promise<void> {
     const assetRepository = AppDataSource.getRepository(AssetDTO)
-    await assetRepository.delete({
-      cashDrawer: {
-        id: drawer_id,
-      },
-      assetType: asset_type,
-    })
+    await assetRepository.delete(asset_id)
   }
 
   /**
@@ -105,6 +100,20 @@ export class AssetRepository implements IAssetRepository {
       cache: 60 * 1000,
     })
 
+    return assets
+  }
+
+  /**
+   * Get assets
+   * @async
+   * @param {number} asset_id - The ID of the cash drawer.
+   * @returns {IAssetInRequestDTO} The list of assets data.
+   */
+  async findById(asset_id: number): Promise<IAssetInRequestDTO | unknown> {
+    const assetRepository = AppDataSource.getRepository(AssetDTO)
+    const assets = await assetRepository.findOneBy({
+      id: asset_id,
+    })
     return assets
   }
 
