@@ -241,7 +241,6 @@ export class OrderDetailsRepository implements IOrderDetailsRepository {
         updatedAt: true,
       },
     })
-    console.log(total)
 
     return {
       body: orders,
