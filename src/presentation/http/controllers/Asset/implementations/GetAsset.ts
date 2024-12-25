@@ -39,20 +39,16 @@ export class GetAssetController implements IController {
     if (httpRequest.query && Object.keys(httpRequest.query).length > 0) {
       const queryStringParams = Object.keys(httpRequest.query)
 
+      let request: any
       if (
         queryStringParams.includes('drawer_id') &&
         queryStringParams.includes('page')
       ) {
-        const request = httpRequest.query as { page: number; drawer_id: number }
-
-        // Executes the get all asset use case.
-        response = await this.getAllAssetUseCase.execute(request.drawer_id)
-      } else {
-        // Invalid parameters, return a 422 Unprocessable Entity error.
-        error = this.httpErrors.error_422()
-        return new HttpResponse(error.statusCode, error.body)
+        request = httpRequest.query as { page: number; drawer_id: number }
       }
 
+      // Executes the get all asset use case.
+      response = await this.getAllAssetUseCase.execute(request?.drawer_id)
       if (!response.success) {
         // Get all assets failed, return a 404 Not Found error.
         error = this.httpErrors.error_404()

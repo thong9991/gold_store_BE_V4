@@ -212,12 +212,15 @@ export class OrderDetailsRepository implements IOrderDetailsRepository {
       order: {
         id: 'DESC',
       },
+      relations: ['staff'],
       select: {
         id: true,
         staff: {
           id: true,
           firstName: true,
           lastName: true,
+          phone: true,
+          address: true,
         },
         total: true,
         goldToCash: true,
