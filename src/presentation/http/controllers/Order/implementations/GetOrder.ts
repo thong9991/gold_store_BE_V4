@@ -37,18 +37,18 @@ export class GetOrderController implements IController {
 
     // Validates query parameters.
     if (httpRequest.query && Object.keys(httpRequest.query).length > 0) {
-      const queryStringParams = Object.keys(httpRequest.query)
-
-      if (queryStringParams.includes('page')) {
-        const page = (httpRequest.query as { page: number }).page
-
-        // Executes the get all order use case.
-        response = await this.getAllOrderUseCase.execute(page)
-      } else {
-        // Invalid parameters, return a 422 Unprocessable Entity error.
-        error = this.httpErrors.error_422()
-        return new HttpResponse(error.statusCode, error.body)
+      const request = httpRequest.query as {
+        page: number
+        startDate: string
+        endDate: string
       }
+
+      // Executes the get all order use case.
+      response = await this.getAllOrderUseCase.execute(
+        request.page,
+        request.startDate,
+        request.endDate
+      )
 
       if (!response.success) {
         // Get all orders failed, return a 404 Not Found error.

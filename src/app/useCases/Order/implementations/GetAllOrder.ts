@@ -22,9 +22,17 @@ export class GetAllOrderUseCase implements IGetAllOrderUseCase {
    * @param {number} page - The page number of pagination.
    * @returns {ResponseDTO} The response data.
    */
-  async execute(page: number): Promise<ResponseDTO> {
+  async execute(
+    page: number,
+    startDate?: string,
+    endDate?: string
+  ): Promise<ResponseDTO> {
     try {
-      const orders = await this.orderDetailsRepository.findAll(page)
+      const orders = await this.orderDetailsRepository.findAll(
+        page,
+        startDate,
+        endDate
+      )
 
       if (orders.total == 0) {
         return {

@@ -11,5 +11,9 @@ export interface IGetAllOrderUseCase {
    * @param {number} page - The page number for pagination.
    * @returns {Promise<ResponseDTO>} The response data.
    */
-  execute(page: number): Promise<ResponseDTO>
+  execute(
+    page: number,
+    startDate?: string,
+    endDate?: string
+  ): Promise<ResponseDTO>
 }

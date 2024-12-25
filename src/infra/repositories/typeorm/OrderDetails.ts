@@ -202,7 +202,11 @@ export class OrderDetailsRepository implements IOrderDetailsRepository {
    * @param {number} pageNumber - The page number to retrieve.
    * @returns {Promise<PaginationDTO>} The paginated list of orders.
    */
-  async findAll(pageNumber: number): Promise<PaginationDTO> {
+  async findAll(
+    pageNumber: number,
+    startDate?: string,
+    endDate?: string
+  ): Promise<PaginationDTO> {
     const perPage = 4
 
     const orderDetailsRepository = AppDataSource.getRepository(OrderDetailsDTO)
@@ -211,6 +215,12 @@ export class OrderDetailsRepository implements IOrderDetailsRepository {
       skip: Math.ceil((pageNumber - 1) * perPage),
       order: {
         id: 'DESC',
+      },
+      where: {
+        createdAt: Between(
+          startDate ? new Date(`${startDate} 00:00:00`) : new Date(0),
+          endDate ? new Date(`${endDate} 23:59:59`) : new Date()
+        ),
       },
       relations: ['staff'],
       select: {
@@ -231,6 +241,7 @@ export class OrderDetailsRepository implements IOrderDetailsRepository {
         updatedAt: true,
       },
     })
+    console.log(total)
 
     return {
       body: orders,

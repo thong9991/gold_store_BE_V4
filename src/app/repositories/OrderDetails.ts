@@ -69,7 +69,11 @@ export interface IOrderDetailsRepository {
    * @param {number} pageNumber - The page number for pagination.
    * @returns {Promise<PaginationDTO>} The paginated order list.
    */
-  findAll(pageNumber: number): Promise<PaginationDTO>
+  findAll(
+    pageNumber: number,
+    startDate?: string,
+    endDate?: string
+  ): Promise<PaginationDTO>
 
   /**
    * Find statistics for order
